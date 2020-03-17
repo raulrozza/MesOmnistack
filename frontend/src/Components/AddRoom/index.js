@@ -103,7 +103,6 @@ const AddRoom = ({ closeModal, updateRooms }) => {
                                     <Form.Control as="select" onChange={(event) => changeType(event.target.value, questionIndex)}>
                                         <option value="text">Texto</option>
                                         <option value="selection">Seleção</option>
-                                        <option value="options">Múltipla Escolha</option>
                                     </Form.Control>
                                     <Button size="sm" variant="danger" onClick={() => removeQuestion(questionIndex)}><FontAwesomeIcon icon="times" /></Button>
                                 </div>

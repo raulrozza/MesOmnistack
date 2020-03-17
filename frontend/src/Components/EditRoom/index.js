@@ -110,10 +110,9 @@ const EditRoom = ({ closeModal, room }) => {
                         {questionList.map((question, questionIndex) => (
                             <div key={`question-${questionIndex}`} className="question-prompt">
                                 <div>
-                                    <Form.Control as="select" onChange={(event) => changeType(event.target.value, questionIndex)}>
+                                    <Form.Control as="select" value={question.type} onChange={(event) => changeType(event.target.value, questionIndex)}>
                                         <option value="text">Texto</option>
                                         <option value="selection">Seleção</option>
-                                        <option value="options">Múltipla Escolha</option>
                                     </Form.Control>
                                     <Button size="sm" variant="danger" onClick={() => removeQuestion(questionIndex)}><FontAwesomeIcon icon="times" /></Button>
                                 </div>

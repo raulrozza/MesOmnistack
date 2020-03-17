@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import QRCode from 'qrcode.react';
 
 // Bootstrap
-import { Button, Col, FormControl, InputGroup, Modal, Row, Table } from 'react-bootstrap';
+import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
 
 // Components
 import AddRoom from '../../Components/AddRoom';
@@ -22,6 +23,8 @@ const Main = () => {
     const [ editRoom, setEditRoom ] = useState(false);
     const [ shareRoom, setShareRoom ] = useState(false);
     const [ confirmDeletion, setConfirmDeletion ] = useState(false);
+    const [ showQrCode, setShowQrCode ] = useState(true);
+    const standardLink = "exp://192.168.0.107:19000";
 
     useEffect(() => {
         const getRooms = async () => {
@@ -49,6 +52,7 @@ const Main = () => {
 
     const showShareRoom = (id) => {
         setSelectedRoom(id);
+        setShowQrCode(true);
         setShareRoom(true);
     }
 
@@ -60,6 +64,7 @@ const Main = () => {
     const hideShareRoom = () => {
         setShareRoom(false);
         setSelectedRoom(undefined);
+        setShowQrCode(false);
     }
 
     const deleteRoom = async () => {
@@ -93,9 +98,9 @@ const Main = () => {
             <tbody>
                 {rooms.map(room => (
                     <tr key={room._id}>
-                        <Col as="th" md="8">{room.name}</Col>
-                        <Col as="th" md="2">{room.answerList.length}</Col>
-                        <Col as="th" md="2" className="option-icons">
+                        <Col as="td" md="8">{room.name}</Col>
+                        <Col as="td" md="2">{room.answerList.length}</Col>
+                        <Col as="td" md="2" className="option-icons">
                             <div>
                                 <Button variant="outline-info" size="sm" onClick={() => showEditPanel(room._id)}><FontAwesomeIcon icon={[ "far", "edit" ]} /></Button>
                                 <Button variant="outline-danger" size="sm" onClick={() => showConfirmDeletion(room._id)}><FontAwesomeIcon icon={[ "far", "trash-alt" ]} /></Button>
@@ -126,15 +131,8 @@ const Main = () => {
         <Modal size="sm" centered show={shareRoom} onHide={hideShareRoom}>
             <Modal.Header closeButton>Compartilhe a Sala</Modal.Header>
             <Modal.Body>
-                <Row>
-                    <Col>
-                        <InputGroup className="mb-3">
-                            <FormControl placeholder="Recipient's username" />
-                            <InputGroup.Append>
-                                <Button>Copiar Link</Button>
-                            </InputGroup.Append>
-                        </InputGroup>
-                    </Col>
+                <Row className="justify-content-center">
+                    {showQrCode && <QRCode value={`${standardLink}/--/room/${selectedRoom}`} />}
                 </Row>
             </Modal.Body>
         </Modal>
