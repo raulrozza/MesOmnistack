@@ -1,0 +1,28 @@
+.question-container{
+    margin-bottom: 10px;
+}
+
+.question-title{
+    font-size: large;
+    font-weight: bold;
+    color: #343a40;
+    border-bottom: 1px solid #343a40;
+}
+
+.question-answers{
+    font-size: small;
+    background-color: #d4eaffa9;
+}
+
+.question-answers p{
+    padding: 5px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    margin: 2.5px 0;
+    cursor: default;
+}
+
+.question-answers p:hover{
+    background-color: #b6d1eba9;
+    border-color: #343a40;
+}

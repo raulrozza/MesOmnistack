@@ -7,6 +7,7 @@ import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
 // Components
 import AddRoom from '../../Components/AddRoom';
 import EditRoom from '../../Components/EditRoom';
+import ShowRoom from '../../Components/ShowRoom';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -22,6 +23,7 @@ const Main = () => {
     const [ addRoom, setAddRoom ] = useState(false);
     const [ editRoom, setEditRoom ] = useState(false);
     const [ shareRoom, setShareRoom ] = useState(false);
+    const [ showRoom, setShowRoom ] = useState(false);
     const [ confirmDeletion, setConfirmDeletion ] = useState(false);
     const [ showQrCode, setShowQrCode ] = useState(true);
     const standardLink = "exp://192.168.0.107:19000";
@@ -50,6 +52,11 @@ const Main = () => {
         setEditRoom(true);
     }
 
+    const showRoomDetails = (id) => {
+        setSelectedRoom(id);
+        setShowRoom(true);
+    }
+
     const showShareRoom = (id) => {
         setSelectedRoom(id);
         setShowQrCode(true);
@@ -58,6 +65,11 @@ const Main = () => {
 
     const hideEditPanel = () => {
         setEditRoom(false);
+        setSelectedRoom(undefined)
+    }
+
+    const hideRoomDetails = () => {
+        setShowRoom(false);
         setSelectedRoom(undefined)
     }
 
@@ -98,7 +110,7 @@ const Main = () => {
             <tbody>
                 {rooms.map(room => (
                     <tr key={room._id}>
-                        <Col as="td" md="8">{room.name}</Col>
+                        <Col as="td" md="8" onClick={() => showRoomDetails(room._id)}>{room.name}</Col>
                         <Col as="td" md="2">{room.answerList.length}</Col>
                         <Col as="td" md="2" className="option-icons">
                             <div>
@@ -117,7 +129,11 @@ const Main = () => {
         </Modal>
 
         <Modal size="md" show={editRoom} onHide={hideEditPanel}>
-            <EditRoom closeModal={hideEditPanel} room={selectedRoom} />
+            <EditRoom closeModal={hideEditPanel} id={selectedRoom} />
+        </Modal>
+
+        <Modal size="md" show={showRoom} onHide={hideRoomDetails}>
+            <ShowRoom closeModal={hideRoomDetails} id={selectedRoom} />
         </Modal>
 
         <Modal size="sm" centered show={confirmDeletion} onHide={() => setConfirmDeletion(false)}>

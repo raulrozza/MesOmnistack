@@ -30,3 +30,7 @@
 .main-section .option-icons button{
     margin: 0 5px;
 }
+
+.main-section tr{
+    cursor: pointer;
+}

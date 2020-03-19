@@ -11,24 +11,24 @@ import api from '../../services/api';
 
 import './styles.css';
 
-const EditRoom = ({ closeModal, room }) => {
+const EditRoom = ({ closeModal, id }) => {
     const [ name, setName ] = useState("");
     const [ questionList, setQuestionList ] = useState([]);
 
     useEffect(() => {
         const loadRoom = async () => {
-            const response = await api.get(`/room/${room}`);
+            const response = await api.get(`/room/${id}`);
 
             setName(response.data.name);
             setQuestionList(response.data.questionList);
         }
-        if(room)
+        if(id)
             loadRoom();
         else{
             setName("");
             setQuestionList([]);
         }
-    }, [room])
+    }, [id])
 
     const addQuestion = () => {
         const question = {
@@ -87,7 +87,7 @@ const EditRoom = ({ closeModal, room }) => {
 
     const handleSubmit = async () => {
 
-        await api.put(`/room/${room}`, {
+        await api.put(`/room/${id}`, {
             name,
             questionList,
         });

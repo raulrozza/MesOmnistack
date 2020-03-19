@@ -8,7 +8,7 @@ module.exports = {
             _id: id
         }, {
             $push: {
-                answerList: answers,
+                answerList: [ answers ],
             }
         });
 
