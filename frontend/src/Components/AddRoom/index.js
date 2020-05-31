@@ -9,6 +9,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // Services
 import api from '../../services/api';
 
+// Utils
+import { addItemToArray, removeItemFromArray, updateItemInArray } from '../../utils/array';
+
 import './styles.css';
 
 const AddRoom = ({ closeModal, updateRooms }) => {
@@ -21,16 +24,16 @@ const AddRoom = ({ closeModal, updateRooms }) => {
             type: "text"
         }
 
-        setQuestionList([ ...questionList, question ])
+        setQuestionList(addItemToArray(questionList, question))
     }
 
-    const addOption = (questionIndex) => {
+    const addOption = (index) => {
         let changedQuestion = {
-            ...questionList[questionIndex],
-            options: [ ...questionList[questionIndex].options, "" ],
+            ...questionList[index],
+            options: addItemToArray(questionList[index].options, ""),
         };
 
-        setQuestionList([ ...questionList.slice(0, questionIndex), changedQuestion, ...questionList.slice(questionIndex+1, questionList.length) ]);
+        setQuestionList(updateItemInArray(questionList, changedQuestion, index));
     }
 
     const changeText = (value, index) => {
@@ -39,21 +42,17 @@ const AddRoom = ({ closeModal, updateRooms }) => {
             question: value
         };
 
-        setQuestionList([ ...questionList.slice(0, index), changedQuestion, ...questionList.slice(index+1, questionList.length) ]);
+        setQuestionList(updateItemInArray(questionList, changedQuestion, index));
     }
 
-    const changeOptionText = (value, questionIndex, optionIndex) => {
-        const question = questionList[questionIndex];
+    const changeOptionText = (value, index, optionIndex) => {
+        const question = questionList[index];
         let changedQuestion = {
             ...question,
-            options: [
-                ...question.options.slice(0, optionIndex),
-                value,
-                ...question.options.slice(optionIndex+1, question.options.length)
-            ]
+            options: updateItemInArray(question.options, value, optionIndex)
         };
 
-        setQuestionList([ ...questionList.slice(0, questionIndex), changedQuestion, ...questionList.slice(questionIndex+1, questionList.length) ]);
+        setQuestionList(updateItemInArray(questionList, changedQuestion, index));
     }
 
     const changeType = (value, index) => {
@@ -63,11 +62,11 @@ const AddRoom = ({ closeModal, updateRooms }) => {
             options: (value !== "text") ? [] : undefined,
         };
 
-        setQuestionList([ ...questionList.slice(0, index), changedQuestion, ...questionList.slice(index+1, questionList.length) ]);
+        setQuestionList(updateItemInArray(questionList, changedQuestion, index));
     }
 
     const removeQuestion = (index) => {
-        setQuestionList([ ...questionList.slice(0, index), ...questionList.slice(index+1, questionList.length) ]);
+        setQuestionList(removeItemFromArray(questionList, index));
     }
 
     const handleSubmit = async () => {

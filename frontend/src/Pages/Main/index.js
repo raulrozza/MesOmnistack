@@ -20,10 +20,9 @@ import './styles.css';
 const Main = () => {
     const [ rooms, setRooms ] = useState([]);
     const [ selectedRoom, setSelectedRoom ] = useState(undefined);
-    const [ addRoom, setAddRoom ] = useState(false);
-    const [ editRoom, setEditRoom ] = useState(false);
+    const [ showModal, setShowModal ] = useState(false);
+    const [ modalType, setModalType ] = useState(undefined);
     const [ shareRoom, setShareRoom ] = useState(false);
-    const [ showRoom, setShowRoom ] = useState(false);
     const [ confirmDeletion, setConfirmDeletion ] = useState(false);
     const [ showQrCode, setShowQrCode ] = useState(true);
     const standardLink = "exp://192.168.0.107:19000";
@@ -42,35 +41,25 @@ const Main = () => {
         getRooms();
     }, []);
 
+    const hideModal = () => {
+        setShowModal(false);
+    }
+
+    const openModal = (type, id) => {
+        setModalType(type);
+        setSelectedRoom(id);
+        setShowModal(true);
+    }
+
     const showConfirmDeletion = (id) => {
         setSelectedRoom(id);
         setConfirmDeletion(true);
-    }
-
-    const showEditPanel = (id) => {
-        setSelectedRoom(id);
-        setEditRoom(true);
-    }
-
-    const showRoomDetails = (id) => {
-        setSelectedRoom(id);
-        setShowRoom(true);
     }
 
     const showShareRoom = (id) => {
         setSelectedRoom(id);
         setShowQrCode(true);
         setShareRoom(true);
-    }
-
-    const hideEditPanel = () => {
-        setEditRoom(false);
-        setSelectedRoom(undefined)
-    }
-
-    const hideRoomDetails = () => {
-        setShowRoom(false);
-        setSelectedRoom(undefined)
     }
 
     const hideShareRoom = () => {
@@ -97,7 +86,7 @@ const Main = () => {
             <div>
                 <h1>EJEC Quiz</h1>
             </div>
-            <Button variant="outline-primary" onClick={() => setAddRoom(true)}><FontAwesomeIcon icon="plus" /> Adicionar Sala</Button>
+            <Button variant="outline-primary" onClick={() => openModal('add')}><FontAwesomeIcon icon="plus" /> Adicionar Sala</Button>
         </header>
         <Table size="sm" variant="dark" hover>
             <thead >
@@ -110,11 +99,11 @@ const Main = () => {
             <tbody>
                 {rooms.map(room => (
                     <tr key={room._id}>
-                        <Col as="td" md="8" onClick={() => showRoomDetails(room._id)}>{room.name}</Col>
+                        <Col as="td" md="8" onClick={() => openModal('show', room._id)}>{room.name}</Col>
                         <Col as="td" md="2">{room.answerList.length}</Col>
                         <Col as="td" md="2" className="option-icons">
                             <div>
-                                <Button variant="outline-info" size="sm" onClick={() => showEditPanel(room._id)}><FontAwesomeIcon icon={[ "far", "edit" ]} /></Button>
+                                <Button variant="outline-info" size="sm" onClick={() => openModal('edit', room._id)}><FontAwesomeIcon icon={[ "far", "edit" ]} /></Button>
                                 <Button variant="outline-danger" size="sm" onClick={() => showConfirmDeletion(room._id)}><FontAwesomeIcon icon={[ "far", "trash-alt" ]} /></Button>
                                 <Button variant="outline-success" size="sm" onClick={() => showShareRoom(room._id)}><FontAwesomeIcon icon="share-alt" /></Button>
                             </div>
@@ -124,16 +113,19 @@ const Main = () => {
             </tbody>
         </Table>
 
-        <Modal size="md" show={addRoom} onHide={() => setAddRoom(false)}>
-            <AddRoom closeModal={() => setAddRoom(false)} updateRooms={updateRooms} />
-        </Modal>
-
-        <Modal size="md" show={editRoom} onHide={hideEditPanel}>
-            <EditRoom closeModal={hideEditPanel} id={selectedRoom} />
-        </Modal>
-
-        <Modal size="md" show={showRoom} onHide={hideRoomDetails}>
-            <ShowRoom closeModal={hideRoomDetails} id={selectedRoom} />
+        <Modal size="md" show={showModal} onHide={hideModal}>
+            {(() => {
+                switch(modalType){
+                    case 'add':
+                        return <AddRoom closeModal={hideModal} updateRooms={updateRooms} />
+                    case 'edit':
+                        return <EditRoom closeModal={hideModal} id={selectedRoom} />
+                    case 'show':
+                        return <ShowRoom closeModal={hideModal} id={selectedRoom} />
+                    default:
+                        return <></>
+                }
+            })()}
         </Modal>
 
         <Modal size="sm" centered show={confirmDeletion} onHide={() => setConfirmDeletion(false)}>
